@@ -30,22 +30,23 @@ Mesa has two core objects, Agent and Model. These are the basics to build a Mesa
 from mesa import Agent, Model
 
 class myAgent(Agent):
-	def __init__(self, unique_id, model):
-		super().__init__(unique_id, model) # use super class Agent's init function in child class myAgent
-		# ...
+  def __init__(self, unique_id, model):
+  	'''use super class Agent's init function in child class myAgent'''
+  	super().__init__(unique_id, model) 
+  	# ...
 
-	def step(self):
-		# do something
+  def step(self):
+  	# do something
 
 class myModel(Model):
-	def __init__(self, n):
-		self.numberOfAgents = n
+  def __init__(self, n):
+  	self.numberOfAgents = n
 
-		for i in range(self.numberOfAgents):
-			agent = myAgent(i, self)
+  	for i in range(self.numberOfAgents):
+  	  agent = myAgent(i, self)
 
-	def step():
-		# do something
+  def step():
+  	# do something
 ``` 
 
 ## Support 
