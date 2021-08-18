@@ -56,6 +56,25 @@ class myModel(Model):
 		self.schedule.step() # activate agents' steps according to the schedule, here at random.
 ``` 
 
+#### Schedulers
+
+##### BaseScheduler
+
+This is the base scheduler, which activates agents in the order they've been added. It is the parent of all the other schedulers.
+- `add(Agent)` adds Agent instance to the scheduler
+- `remove(Agent)` removes all instances of Agent from the scheduler
+- `get_agent_count()` current number of agents in the queue
+- `agent_buffer()` yields the agents while letting the user remove and/or add agents during stepping
+- `step()` executes the step of all the agents
+
+##### RandomActivation
+
+Executes the step of all agents, one at a time, in random order.
+
+##### SimulataneousActivation
+**Requires `advance()` method in Agent class.** Executes the step of the agents simultaneously. `step()` activates the agents and stages any necessary changes, but does not apply them yet. `advance()` applies the changes.
+
+
 ## Support 
 
 Raise an issue 
