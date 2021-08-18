@@ -1,0 +1,32 @@
+from mesa import Model
+#from mesa.space import MultiGrid
+from mesa.time import SimultaneousActivation
+from flock.agent import Fish
+
+class Swarm(Model):
+    """A model with some number of Fish agents."""
+    def __init__(self, N, width, height):
+        self.n_agents = N
+        #self.grid = MultiGrid(width, height, True)
+        
+        self.schedule = SimultaneousActivation(self) # scheduler, very useful to control the individual order to perform actions
+        # Here, it simulates the simultaneous activation of all the agents.
+        # This scheduler requires that each agent have two methods: step and advance.
+        # step() activates the agent and stages any necessary changes, but does not
+        # apply them yet. advance() then applies the changes.
+
+        # Create agents
+        for i in range(self.n_agents):
+            fishAgent = Fish(i, self)
+            self.schedule.add(fishAgent)
+
+            # Add the agent to a random grid cell
+            #x = self.random.randrange(self.grid.width)
+            #y = self.random.randrange(self.grid.height)
+            self.grid.place_agent(fishAgent, (x, y))
+            #fishAgent.x = x
+            #fishAgent.y = y
+            
+        def step(self):
+            '''Advance the model by one step.'''
+            self.schedule.step()
