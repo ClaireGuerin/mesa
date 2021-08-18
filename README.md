@@ -24,29 +24,36 @@ Make sure you have Numpy installed in your Python environment.
 ## Usage
 
 ### Using Mesa
-Mesa has two core objects, Agent and Model. These are the basics to build a Mesa ABM. `Agent` and `Model` each require a `step()` function which contains a single step for the / all individual(s). Load and use them in Python with: 
+Mesa has two core objects, Agent and Model. These are the basics to build a Mesa ABM. `Agent` and `Model` each require a `step()` function which contains a single step for the / all individual(s). The `step()` function is used by the Scheduler of your choice. Schedulers are in the `mesa.time` module. *Some Schedulers also require an `advance()` function, which will apply the changes prepared in the `step()` function.*
+
 
 ```python
 from mesa import Agent, Model
+from mesa.time import RandomActivation
 
 class myAgent(Agent):
-  def __init__(self, unique_id, model):
-  	'''use super class Agent's init function in child class myAgent'''
-  	super().__init__(unique_id, model) 
-  	# ...
+	def __init__(self, unique_id, model):
+		'''use super class Agent's init function in child class myAgent'''
+		super().__init__(unique_id, model)
+		# ...
 
-  def step(self):
-  	# do something
+	def step(self):
+		# do something
+
+	def advance(self):
+		pass
 
 class myModel(Model):
-  def __init__(self, n):
-  	self.numberOfAgents = n
+	def __init__(self, n):
+		self.numberOfAgents = n
+		self.schedule = RandomActivation(self) # create the Scheduler. In this case, agents are activated at random
 
-  	for i in range(self.numberOfAgents):
-  	  agent = myAgent(i, self)
+		for i in range(self.numberOfAgents):
+			agent = myAgent(i, self)
+			self.schedule.add(agent) # add agent to the Scheduler
 
-  def step():
-  	# do something
+	def step(self):
+		self.schedule.step() # activate agents' steps according to the schedule, here at random.
 ``` 
 
 ## Support 
