@@ -1,5 +1,5 @@
 from mesa import Agent
-import numpy as np
+#import numpy as np
 
 class Fish(Agent):
     """ An agent with body length, position, scalar speed, direction."""

@@ -14,16 +14,39 @@ Coming soon
 
 Fork or download this repository on your local machine. 
 
-
 ### Requirements
 
 This code was developped under Ubuntu (20.04.2 LTS)
 
 Install [Mesa](https://mesa.readthedocs.io/en/master/) with `pip install mesa`
+Make sure you have Numpy installed in your Python environment.
 
 ## Usage
 
-Coming soon
+### Using Mesa
+Mesa has two core objects, Agent and Model. These are the basics to build a Mesa ABM. `Agent` and `Model` each require a `step()` function which contains a single step for the / all individual(s). Load and use them in Python with: 
+
+```python
+from mesa import Agent, Model
+
+class myAgent(Agent):
+	def __init__(self, unique_id, model):
+		super().__init__(unique_id, model) # use super class Agent's init function in child class myAgent
+		# ...
+
+	def step(self):
+		# do something
+
+class myModel(Model):
+	def __init__(self, n):
+		self.numberOfAgents = n
+
+		for i in range(self.numberOfAgents):
+			agent = myAgent(i, self)
+
+	def step():
+		# do something
+``` 
 
 ## Support 
 
