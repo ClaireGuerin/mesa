@@ -9,7 +9,7 @@ class Swarm(Model):
     """A model with some number of Fish agents."""
     def __init__(self, N, x_max, y_max):
         self.n_agents = N
-        self.size = ContinuousSpace(x_max, y_max, True)
+        self.space = ContinuousSpace(x_max, y_max, True)
 
         logging.info('Creating model...\n')
         
@@ -26,12 +26,11 @@ class Swarm(Model):
 
             self.schedule.add(fishAgent)
 
-            # Add the agent to a random grid cell
-            #x = self.random.randrange(self.grid.width)
-            #y = self.random.randrange(self.grid.height)
-            #self.grid.place_agent(fishAgent, (x, y))
-            #fishAgent.x = x
-            #fishAgent.y = y
+            # Add the agent to a random position in space
+            # Using the model's random generator
+            x = self.random.randrange(self.space.width)
+            y = self.random.randrange(self.space.height)
+            self.space.place_agent(fishAgent, (x, y))
             
     def step(self):
         '''Advance the model by one step.'''
