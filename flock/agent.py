@@ -21,16 +21,16 @@ class Fish(Agent):
         
         #get_neighbours
         
-        def step(self):
-            """ The agent's step will go here.
-            For demonstration purposes, we increase body length by 1"""
-            self.bodyLength += self.unique_id
-            logging.info( 'Agent {0} has body length = {1}'.format(self.unique_id, self.bodyLength) )
+    def step(self):
+        """ The agent's step will go here.
+        For demonstration purposes, we increase body length"""
+        self.bodyLength += self.unique_id
+        logging.info( 'Agent {0} has body length = {1}'.format(self.unique_id, self.bodyLength) )
             
             
-        # def advance():
-        #     """Apply changes incurred in step()
-        #     For demonstration purposes we will print the agent's unique_id"""
-        #     print ("Fish #" + str(self.unique_id) + ", BL= " + str(self.bodyLength) + ".")
+    # def advance():
+    #     """Apply changes incurred in step()
+    #     For demonstration purposes we will print the agent's unique_id"""
+    #     print ("Fish #" + str(self.unique_id) + ", BL= " + str(self.bodyLength) + ".")
             
             

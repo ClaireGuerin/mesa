@@ -38,6 +38,6 @@ class Swarm(Model):
             #fishAgent.x = x
             #fishAgent.y = y
             
-        def step(self):
-            '''Advance the model by one step.'''
-            self.schedule.step()
+    def step(self):
+        '''Advance the model by one step.'''
+        self.schedule.step()
