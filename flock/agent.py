@@ -1,10 +1,7 @@
 from mesa import Agent
 import logging
 #import numpy as np
-
-logging.basicConfig(level=logging.INFO,
-                    format='[%(asctime)s]::%(levelname)s  %(message)s',
-                    datefmt='%Y.%m.%d - %H:%M:%S')
+from flock.logging import *
 
 class Fish(Agent):
     """ An agent with body length, position, scalar speed, direction."""

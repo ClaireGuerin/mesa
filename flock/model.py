@@ -1,20 +1,15 @@
 from mesa import Model
-#from mesa.space import MultiGrid
+from mesa.space import ContinuousSpace
 from mesa.time import SimultaneousActivation
 from flock.agent import Fish
-import logging
-
-
-logging.basicConfig(level=logging.INFO,
-                    format='[%(asctime)s]::%(levelname)s  %(message)s',
-                    datefmt='%Y.%m.%d - %H:%M:%S')
+from flock.logging import *
 
 
 class Swarm(Model):
     """A model with some number of Fish agents."""
-    def __init__(self, N, width, height):
+    def __init__(self, N, x_max, y_max):
         self.n_agents = N
-        #self.grid = MultiGrid(width, height, True)
+        self.size = ContinuousSpace(x_max, y_max, True)
 
         logging.info('Creating model...\n')
         

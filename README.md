@@ -181,7 +181,6 @@ Network Grid where each node contains zero or more agents.
 - `iter_cell_list_contents()`
 
 
-
 ## Support 
 
 Raise an issue 
