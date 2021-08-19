@@ -31,6 +31,3 @@ class Fish(Agent):
         """Apply changes incurred in step()
         For demonstration purposes we will print the agent's unique_id"""        
         logging.info( 'Agent {0} has body length = {1}'.format(self.unique_id, self.bodyLength) )
-
-            
-            

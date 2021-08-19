@@ -23,9 +23,34 @@ Make sure you have Numpy installed in your Python environment.
 
 ## Usage
 
-### Using Mesa
+### A mostly comprehensive description of the classes in the Mesa framework
 Mesa has two core objects, Agent and Model. These are the basics to build a Mesa ABM. `Agent` and `Model` each require a `step()` function which contains a single step for the / all individual(s). The `step()` function is used by the Scheduler of your choice. Schedulers are in the `mesa.time` module. *Some Schedulers also require an `advance()` function, which will apply the changes prepared in the `step()` function.*
 
+#### Agent class
+
+Attributes:
+- `unique_id` agent's unique id
+- `pos` agent position on the grid
+
+Methods:
+- `step()` single step of the agent.
+- `advance()` apply agent's step. To use if scheduler = `SimultaneousActivation`.
+
+#### Model class
+
+Attributes:
+- `random` random-number generator. Works just like Python's random module, but with a fixed seed set when the model is instantiated, that can be used to replicate a specific model run later.
+- `running`  bool indicating if the model should continue running
+- `schedule` none if none specified. Can be set like in example code below.
+- `current_id` individual ID where the model is currently at. See `next_id()` method.
+
+Methods:
+- `run_model()` run the model until the end condition is reached. Overload as needed. 
+- `step()` a single step Overload as needed. 
+- `next_id()` return the next unique ID for agents, increment `current_id`.
+- `rest_randomizer()` reset the model random number generator.
+
+#### Example
 
 ```python
 from mesa import Agent, Model
@@ -71,9 +96,16 @@ This is the base scheduler, which activates agents in the order they've been add
 
 Executes the step of all agents, one at a time, in random order.
 
-##### SimulataneousActivation
+##### SimultaneousActivation
 **Requires `advance()` method in Agent class.** Executes the step of the agents simultaneously. `step()` activates the agents and stages any necessary changes, but does not apply them yet. `advance()` applies the changes.
 
+##### StagedActivation
+Allows agent activation to be divided into several stages instead of a single `step` method. All agents execute one stage before moving on to the next. Agents must have all the stage methods implemented. Stage methods take a model object as their only argument. This schedule tracks steps and time separately. Time advances in fractional increments of 1 / (# of stages), meaning that 1 step = 1 unit of time.
+
+Optional arguments:
+- `stage_list` List of strings of names of stages to run, in the order to run them in.
+- `shuffle` If True, shuffle the order of agents each step.
+- `shuffle_between_stages` If True, shuffle the agents after eachstage; otherwise, only shuffle at the start of each step.
 
 ## Support 
 
