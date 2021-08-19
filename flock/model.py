@@ -30,7 +30,8 @@ class Swarm(Model):
             # Using the model's random generator
             x = self.random.randrange(self.space.width)
             y = self.random.randrange(self.space.height)
-            self.space.place_agent(fishAgent, (x, y))
+            fishAgent.position = (x, y)
+            self.space.place_agent( fishAgent, (x, y) )
             
     def step(self):
         '''Advance the model by one step.'''

@@ -164,7 +164,7 @@ Methods:
 - `remove_agent()` Remove an agent from the simulation.
 - `get_neighbors()` Get all objects within a certain radius.
 - `get_heading()` Get the heading angle between two points, accounting for toroidal space.
-- `get_distance()` Get the distance between two point, accounting for toroidal space.
+- `get_distance()` Get the distance between two points, accounting for toroidal space.
 - `torus_adj()` Adjust coordinates to handle torus looping. If the coordinate is out-of-bounds and the space is toroidal, return the corresponding point within the space. If the space is not toroidal, raise an exception.
 - `out_of_bounds()` Check if a point is out of bounds.
 
