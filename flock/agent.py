@@ -25,12 +25,12 @@ class Fish(Agent):
         """ The agent's step will go here.
         For demonstration purposes, we increase body length"""
         self.bodyLength += self.unique_id
+            
+            
+    def advance(self):
+        """Apply changes incurred in step()
+        For demonstration purposes we will print the agent's unique_id"""        
         logging.info( 'Agent {0} has body length = {1}'.format(self.unique_id, self.bodyLength) )
-            
-            
-    # def advance():
-    #     """Apply changes incurred in step()
-    #     For demonstration purposes we will print the agent's unique_id"""
-    #     print ("Fish #" + str(self.unique_id) + ", BL= " + str(self.bodyLength) + ".")
+
             
             

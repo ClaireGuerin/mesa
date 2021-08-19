@@ -1,6 +1,6 @@
 from mesa import Model
 #from mesa.space import MultiGrid
-from mesa.time import RandomActivation
+from mesa.time import SimultaneousActivation
 from flock.agent import Fish
 import logging
 
@@ -18,7 +18,7 @@ class Swarm(Model):
 
         logging.info('Creating model...\n')
         
-        self.schedule = RandomActivation(self) # scheduler, very useful to control the individual order to perform actions
+        self.schedule = SimultaneousActivation(self) # scheduler, very useful to control the individual order to perform actions
         # Here, it simulates the simultaneous activation of all the agents.
         # This scheduler requires that each agent have two methods: step and advance.
         # step() activates the agent and stages any necessary changes, but does not
