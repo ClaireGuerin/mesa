@@ -12,11 +12,9 @@ class Fish(Agent):
         self.heading = (0, 0) # heading vector of agent, zero before the agent is placed in space
 
     def head(self):
-        newX = self.pos[0] + self.model.parameters.cruiseSpeed * m.cos(self.direction)
-        newY = self.pos[1] + self.model.parameters.cruiseSpeed * m.sin(self.direction)
-        self.newPos = (newX, newY)
+        self.newPos = np.asarray(self.pos) + self.newHeading
 
-    def group(self. radius):
+    def group(self, radius):
          # pos: FloatCoordinate, radius: float, include_center: bool = True
         self.model.space.get_neighbors(self.pos, radius, False)
         
@@ -29,21 +27,29 @@ class Fish(Agent):
 
         # ALIGNMENT
         alignmentGroup = self.group(self.model.parameters.alignmentRadius)
-        xSum, ySum = 0
 
-        for neighbor in alignmentGroup:
-            xSum += neighbor.pos[0]
-            ySum += neighbor.pos[1]
+        if alignmentGroup:
 
-        alignmentDirection = -1 / len(alignmentGroup) * np.array([xSum, ySum])
-        alignmentMagnitude = m.sqrt( np.sum( np.square(alignmentDirection - self.heading) ) )
+            alignmentVector = np.array([0, 0])
 
-        self.alignmentForce = self.model.parameters.alignmentWeight * alignmentDirection / alignmentMagnitude
+            for neighbor in alignmentGroup:
+                alignmentVector += np.asarray(neighbor.pos)
 
+            alignmentDirection = -1 / len(alignmentGroup) * alignmentVector
+            alignmentMagnitude = m.sqrt( np.sum( np.square(alignmentDirection - self.heading) ) )
+
+            alignmentForce = self.model.parameters.alignmentWeight * alignmentDirection / alignmentMagnitude
+
+        else:
+            alignmentForce = np.array([0, 0])
+
+        # HEADING
+        self.newHeading = alignmentForce
         self.head()
                
     def advance(self):
         """Apply changes incurred in step()"""  
         logging.info("Agent {0} moves from {1}".format(self.unique_id, self.pos))      
         self.model.space.move_agent(self, self.newPos)
+        self.heading = self.newHeading
         logging.info(" to {0}\n".format(self.pos))
