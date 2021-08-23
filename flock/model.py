@@ -10,15 +10,14 @@ class Swarm(Model):
     def __init__(self, N, x_max, y_max):
         self.n_agents = N
         self.space = ContinuousSpace(x_max, y_max, True)
-
-        logging.info('Creating model...\n')
-        
         self.schedule = SimultaneousActivation(self) # scheduler, very useful to control the individual order to perform actions
         # Here, it simulates the simultaneous activation of all the agents.
         # This scheduler requires that each agent have two methods: step and advance.
         # step() activates the agent and stages any necessary changes, but does not
         # apply them yet. advance() then applies the changes.
 
+        logging.info('Creating model...\n')
+        
         # Create agents
         for i in range(self.n_agents):
             logging.info( 'Generating agent {0}\n'.format(i) )

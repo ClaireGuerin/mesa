@@ -20,7 +20,7 @@ class Fish(Agent):
         """ The agent's step will go here.
         For demonstration purposes, we increase body length"""
         self.bodyLength += self.unique_id
-        self.n_neighbors = len( model.space.get_neighbors(self.position, 3, False) ) # pos: FloatCoordinate, radius: float, include_center: bool = True
+        self.n_neighbors = len( self.model.space.get_neighbors(self.position, 1, False) ) # pos: FloatCoordinate, radius: float, include_center: bool = True
                
     def advance(self):
         """Apply changes incurred in step()
