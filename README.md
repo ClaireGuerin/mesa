@@ -30,7 +30,7 @@ Mesa has two core objects, Agent and Model. These are the basics to build a Mesa
 
 Attributes:
 - `unique_id` agent's unique id
-- `pos` agent position on the grid
+- `pos` agent position on the grid / in space
 
 Methods:
 - `step()` single step of the agent.
