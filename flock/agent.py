@@ -3,6 +3,7 @@ import logging
 import numpy as np
 import math as m
 from flock.logging import *
+#import pytest
 
 class Fish(Agent):
     """ An agent with body length, position, scalar speed, direction."""
@@ -12,7 +13,7 @@ class Fish(Agent):
         self.heading = (0, 0) # heading vector of agent, zero before the agent is placed in space
 
     def head(self):
-        self.newPos = np.asarray(self.pos) + self.newHeading
+        self.newPos = np.asarray(self.pos) + self.model.parameters.cruiseSpeed * self.newHeading
 
     def group(self, radius):
          # pos: FloatCoordinate, radius: float, include_center: bool = True
@@ -41,7 +42,7 @@ class Fish(Agent):
             alignmentForce = self.model.parameters.alignmentWeight * alignmentDirection / alignmentMagnitude
 
         else:
-            alignmentForce = np.array([0, 0])
+            alignmentForce = np.asarray(self.heading)
 
         # HEADING
         self.newHeading = alignmentForce

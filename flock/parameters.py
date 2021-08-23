@@ -8,4 +8,4 @@ class Parameters(object):
 		self.alignmentWeight = float(1/3)
 		self.separationWeight = float(1/3)
 
-		self.cruiseSpeed = 2  # speed in body length / s
+		self.cruiseSpeed = 2.0  # speed in body length / s
