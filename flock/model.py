@@ -3,6 +3,7 @@ from mesa.space import ContinuousSpace
 from mesa.time import SimultaneousActivation
 from flock.agent import Fish
 from flock.logging import *
+from flock.parameters import Parameters as Par
 
 
 class Swarm(Model):
@@ -15,6 +16,7 @@ class Swarm(Model):
         # This scheduler requires that each agent have two methods: step and advance.
         # step() activates the agent and stages any necessary changes, but does not
         # apply them yet. advance() then applies the changes.
+        self.parameters = Par()
 
         logging.info('Creating model...\n')
         
@@ -29,6 +31,7 @@ class Swarm(Model):
             # Using the model's random generator
             x = self.random.randrange(self.space.width)
             y = self.random.randrange(self.space.height)
+            fishAgent.heading = (x, y)
             self.space.place_agent( fishAgent, (x, y) )
             
     def step(self):
