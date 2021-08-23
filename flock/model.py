@@ -29,9 +29,9 @@ class Swarm(Model):
 
             # Add the agent to a random position in space
             # Using the model's random generator
-            x = self.random.randrange(self.space.width)
-            y = self.random.randrange(self.space.height)
-            fishAgent.heading = (x, y)
+            fishAgent.heading[0] = x = self.random.randrange(self.space.width)
+            fishAgent.heading[1] = y = self.random.randrange(self.space.height)
+            
             self.space.place_agent( fishAgent, (x, y) )
             
     def step(self):
