@@ -14,7 +14,7 @@ class Fish(Agent):
         self.heading = unit(np.array([init_x, init_y])) # heading vector of agent
 
     def head(self):
-        self.newHeading = self.align() + self.cohese()
+        self.newHeading = self.align() + self.cohese() + self.separate()
         self.newPos = np.asarray(self.pos) + self.model.parameters.cruiseSpeed * self.newHeading
 
     def group(self, radius, include_center = False):
@@ -60,6 +60,24 @@ class Fish(Agent):
         else:
             return np.array([0, 0])
 
+    def separate(self):
+        """ SEPARATION """
+
+        separationGroup = self.group(self.model.parameters.separationRadius)
+
+        if separationGroup:
+            # if there are other agents within the separation area:
+
+            separationVector = np.array([0, 0])
+
+            for neighbor in cohesionGroup:
+                distance = np.asarray(neighbor.pos) - np.asarray(self.pos)
+                separationVector += distance / ( magnitude(distance) * magnitude(distance) )
+
+            return force(self.model.parameters.separationWeight, separationVector, len(separationGroup))
+        else:
+            return np.array([0, 0])
+
         
     def step(self):
         """ The agent takes into account three areas:
@@ -67,7 +85,7 @@ class Fish(Agent):
         - alignment (radius defaulted to 5)
         - separation (radius defaulted to 15) """
 
-        # HEADING
+        # Update HEADING according to others
         self.head()
                
     def advance(self):
