@@ -9,5 +9,5 @@ def unit(vec):
 def direction(vec, n):
 	return - 1 / n * vec
 
-def force(vec, weight, sumVec, n):
+def force(weight, sumVec, n):
 	return weight * unit( direction(sumVec, n) )

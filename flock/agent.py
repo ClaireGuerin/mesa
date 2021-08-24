@@ -14,6 +14,7 @@ class Fish(Agent):
         self.heading = unit(np.array([init_x, init_y])) # heading vector of agent
 
     def head(self):
+        self.newHeading = self.align() + self.cohese()
         self.newPos = np.asarray(self.pos) + self.model.parameters.cruiseSpeed * self.newHeading
 
     def group(self, radius, include_center = False):
@@ -67,7 +68,6 @@ class Fish(Agent):
         - separation (radius defaulted to 15) """
 
         # HEADING
-        self.newHeading = self.align() + self.cohese()
         self.head()
                
     def advance(self):
