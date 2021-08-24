@@ -48,7 +48,7 @@ Methods:
 - `run_model()` run the model until the end condition is reached. Overload as needed. 
 - `step()` a single step Overload as needed. 
 - `next_id()` return the next unique ID for agents, increment `current_id`.
-- `rest_randomizer()` reset the model random number generator.
+- `reset_randomizer()` reset the model random number generator.
 
 #### Example
 
@@ -180,6 +180,75 @@ Network Grid where each node contains zero or more agents.
 - `get_all_cell_contents()`
 - `iter_cell_list_contents()`
 
+#### Data Collector
+Handles data collection and storage for us and make it easier to analyze.
+The data collector stores three categories of data: model-level variables, agent-level variables, and tables (which are a catch-all for everything else). Model- and agent-level variables are added to the data collector along with a function for collecting them.
+A `DataCollector` is instantiated with dictionaries of names of model- and agent-level variables to collect, associated with attribute names or functions which actually collect them. When the `collect(...)` method is called, it collects these attributes and executes these functions one by one and stores the results.
+
+```python
+from mesa.datacollection import DataCollector
+
+def compute_mean(model):
+	agent_x, agent_y = 0
+	n = 0
+	for agent in model.schedule.agents:
+		agent_x += agent.pos[0]
+		agent_y += agent.pos[1]
+		++n
+	return [agent_x / n, agent_y / n]
+
+class myModel(Model):
+	def __init__(self, N, width, height):
+		#...
+
+		self.dataCollector = DataCollector(
+			model_reporters={"Mean position": compute_mean},
+			agent_reporters={"ID": "unique_id"})
+
+	def step(self):
+		self.datacollector.collect(self)
+        self.schedule.step()
+```
+
+Arguments:
+- `model_reporters` Dictionary of reporter names and attributes/funcs
+- `agent_reporters` Dictionary of reporter names and attributes/funcs.
+- `tables` Dictionary of table names to lists of column names.
+
+Both `model_reporters` and `agent_reporters` accept a dictionary mapping a variable name to either an attribute name, or a method. For example, if there was only one model-level reporter for number of agents, it might look like: `{"agent_count": lambda m: m.schedule.get_agent_count() }`. If there was only one agent-level reporter (e.g. the agent's energy), it might look like this: `{"energy": "energy"}` or like this: `{"energy": lambda a: a.energy}`. Model reporters can take four types of arguments:
+- **lambda**: `{ "agent_count": lambda m: m.schedule.get_agent_count() }`
+- method with **@property decorators**: `{ "agent_count": schedule.get_agent_count() }`
+- class **attributes** of model: `{"model_attribute": "model_attribute"}`
+- **functions** with parameters that are placed in a list: `{"Model_Function":[function, [par1, par2]]}`
+
+The `tables` argument accepts a dictionary mapping names of tables to lists of columns. For example, if we want to allow agents to write their age when they are destroyed (to keep track of lifespans), it might look like: `{"Lifespan": ["unique_id", "age"]}`
+
+If you want to [pickle](https://machinelearningmastery.com/save-load-machine-learning-models-python-scikit-learn/) your model, do not use lambda functions. If your model includes a large number of agents, you should *only* use attribute names for the agent reporter, it will be much faster.
+
+Attributes:
+- `model_reporters`
+- `agent_reporters`
+- `model_vars`
+- `tables`
+
+Methods:
+
+
+##### Plotting
+
+The `DataCollector` can export the data it has collected as a pandas DataFrame, for easy interactive analysis.
+
+```python
+model = myModel(50, 10, 10)
+for i in range(100):
+    model.step()
+
+mean_pos = model.datacollector.get_model_vars_dataframe()
+mean_pos.plot()
+
+agent_pos = model.datacollector.get_agent_vars_dataframe()
+agent_pos.head() # DataFrame
+```
 
 ## Support 
 
