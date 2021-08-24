@@ -4,52 +4,74 @@ import numpy as np
 import math as m
 from flock.logging import *
 #import pytest
+from flock.vectors import *
 
 class Fish(Agent):
     """ An agent with body length, position, scalar speed, direction."""
     
-    def __init__(self, unique_id, model):
+    def __init__(self, unique_id, model, init_x, init_y):
         super().__init__(unique_id, model)
-        self.heading = (0, 0) # heading vector of agent, zero before the agent is placed in space
+        self.heading = unit(np.array([init_x, init_y])) # heading vector of agent
 
     def head(self):
+        self.newHeading = self.align() + self.cohese()
         self.newPos = np.asarray(self.pos) + self.model.parameters.cruiseSpeed * self.newHeading
 
-    def group(self, radius):
+    def group(self, radius, include_center = False):
          # pos: FloatCoordinate, radius: float, include_center: bool = True
-        self.model.space.get_neighbors(self.pos, radius, False)
-        
-    def step(self):
-        """ The agent's step will go here.
-        The agent has three areas:
-        - cohesion (radius 2)
-        - alignment (radius 5)
-        - separation (radius 15) """
+        self.model.space.get_neighbors(self.pos, radius, include_center)
 
-        # ALIGNMENT
+    def align(self):
+        """ ALIGNMENT """
+
         alignmentGroup = self.group(self.model.parameters.alignmentRadius)
 
         if alignmentGroup:
+            # if there are other agents within the alignement area:
 
             alignmentVector = np.array([0, 0])
 
             for neighbor in alignmentGroup:
-                alignmentVector += np.asarray(neighbor.pos)
+                alignmentVector += neighbor.heading
 
-            alignmentDirection = -1 / len(alignmentGroup) * alignmentVector
-            alignmentMagnitude = m.sqrt( np.sum( np.square(alignmentDirection - self.heading) ) )
+            alignmentDirection = direction( alignmentVector, len(alignmentGroup) )
 
-            alignmentForce = self.model.parameters.alignmentWeight * alignmentDirection / alignmentMagnitude
+            return self.model.parameters.alignmentWeight * unit(alignmentDirection - self.heading)
 
         else:
-            alignmentForce = np.asarray(self.heading)
+            return self.heading
+
+    def cohese(self):
+        """ COHESION
+        attraction to the center of gravity of the group within the cohesion area """
+
+        cohesionGroup = self.group(self.model.parameters.cohesionRadius)
+
+        if cohesionGroup:
+            # if there are other agents within the cohesion area:
+
+            cohesionVector = np.array([0, 0])
+
+            for neighbor in cohesionGroup:
+                distance = np.asarray(neighbor.pos) - np.asarray(self.pos)
+                cohesionVector += unit(distance)
+
+            return force(self.model.parameters.cohesionWeight, cohesionVector, len(cohesionGroup))
+        else:
+            return np.array([0, 0])
+
+        
+    def step(self):
+        """ The agent takes into account three areas:
+        - cohesion (radius defaulted to 2)
+        - alignment (radius defaulted to 5)
+        - separation (radius defaulted to 15) """
 
         # HEADING
-        self.newHeading = alignmentForce
         self.head()
                
     def advance(self):
-        """Apply changes incurred in step()"""  
+        """Apply changes incurred in step(), i.e. update agent's position and heading"""  
         logging.info("Agent {0} moves from {1}".format(self.unique_id, self.pos))      
         self.model.space.move_agent(self, self.newPos)
         self.heading = self.newHeading
