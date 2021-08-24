@@ -9,21 +9,21 @@ from flock.vectors import *
 class Fish(Agent):
     """ An agent with body length, position, scalar speed, direction."""
     
-    def __init__(self, unique_id, model):
+    def __init__(self, unique_id, model, init_x, init_y):
         super().__init__(unique_id, model)
-        self.heading = np.array([0, 0]) # heading vector of agent, zero before the agent is placed in space
+        self.heading = unit(np.array([init_x, init_y])) # heading vector of agent
 
     def head(self):
         self.newPos = np.asarray(self.pos) + self.model.parameters.cruiseSpeed * self.newHeading
 
-    def group(self, radius, include_self = True):
+    def group(self, radius, include_center = False):
          # pos: FloatCoordinate, radius: float, include_center: bool = True
-        self.model.space.get_neighbors(self.pos, radius, include_self)
+        self.model.space.get_neighbors(self.pos, radius, include_center)
 
     def align(self):
         """ ALIGNMENT """
 
-        alignmentGroup = self.group(self.model.parameters.alignmentRadius, False)
+        alignmentGroup = self.group(self.model.parameters.alignmentRadius)
 
         if alignmentGroup:
             # if there are other agents within the alignement area:
@@ -46,28 +46,32 @@ class Fish(Agent):
 
         cohesionGroup = self.group(self.model.parameters.cohesionRadius)
 
-        cohesionVector = np.array([0, 0])
+        if cohesionGroup:
+            # if there are other agents within the cohesion area:
 
-        for neighbor in cohesionGroup:
-            distance = np.asarray(neighbor.pos) - np.asarray(self.pos)
-            cohesionVector += unit(distance)
+            cohesionVector = np.array([0, 0])
 
-        return force(self.model.parameters.cohesionWeight, cohesionVector, len(cohesionGroup))
+            for neighbor in cohesionGroup:
+                distance = np.asarray(neighbor.pos) - np.asarray(self.pos)
+                cohesionVector += unit(distance)
+
+            return force(self.model.parameters.cohesionWeight, cohesionVector, len(cohesionGroup))
+        else:
+            return np.array([0, 0])
 
         
     def step(self):
-        """ The agent's step will go here.
-        The agent has three areas:
-        - cohesion (radius 2)
-        - alignment (radius 5)
-        - separation (radius 15) """
+        """ The agent takes into account three areas:
+        - cohesion (radius defaulted to 2)
+        - alignment (radius defaulted to 5)
+        - separation (radius defaulted to 15) """
 
         # HEADING
         self.newHeading = self.align() + self.cohese()
         self.head()
                
     def advance(self):
-        """Apply changes incurred in step()"""  
+        """Apply changes incurred in step(), i.e. update agent's position and heading"""  
         logging.info("Agent {0} moves from {1}".format(self.unique_id, self.pos))      
         self.model.space.move_agent(self, self.newPos)
         self.heading = self.newHeading

@@ -23,15 +23,16 @@ class Swarm(Model):
         # Create agents
         for i in range(self.n_agents):
             logging.info( 'Generating agent {0}\n'.format(i) )
-            fishAgent = Fish(i, self)
 
-            self.schedule.add(fishAgent)
-
-            # Add the agent to a random position in space
+            # Give the agent a random position in space
             # Using the model's random generator
-            fishAgent.heading[0] = x = self.random.randrange(self.space.width)
-            fishAgent.heading[1] = y = self.random.randrange(self.space.height)
-            
+            x = self.random.randrange(self.space.width)
+            y = self.random.randrange(self.space.height)
+
+            fishAgent = Fish(i, self, x, y)
+
+            # Add the agent to the scheduler and to space
+            self.schedule.add(fishAgent)            
             self.space.place_agent( fishAgent, (x, y) )
             
     def step(self):
