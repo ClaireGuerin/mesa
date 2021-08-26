@@ -1,6 +1,8 @@
-from flock.model import Swarm
+from swarm.model import Swarm
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import animation, rc
+from IPython.display import HTML, Image
 
 nAgents = 10
 nSteps = 20

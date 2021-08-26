@@ -2,9 +2,9 @@ from mesa import Agent
 import logging
 import numpy as np
 import math as m
-from flock.logging import *
+from swarm.logging import *
 #import pytest
-from flock.vectors import *
+from swarm.vectors import *
 
 class Fish(Agent):
     """ An agent with body length, position, scalar speed, direction."""

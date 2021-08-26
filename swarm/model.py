@@ -2,9 +2,9 @@ from mesa import Model
 from mesa.space import ContinuousSpace
 from mesa.time import SimultaneousActivation
 from mesa.datacollection import DataCollector
-from flock.agent import Fish
-from flock.logging import *
-from flock.parameters import Parameters as Par
+from swarm.agent import Fish
+from swarm.logging import *
+from swarm.parameters import Parameters as Par
 
 def get_x_pos(model):
     return model.pos[0]
