@@ -232,7 +232,11 @@ Attributes:
 - `tables`
 
 Methods:
-
+- `collect(model)` Collect all the data for the given model object.
+- `add_table_row(table_name, row)` Add a row dictionary to a specific table.
+- `get_model_vars_dataframe()` Create a pandas DataFrame from the *model* variables. Has one column for each model variable, with index = model tick.
+- `get_agent_vars_dataframe()` Create a pandas DataFrame from the *agent* variables. Has one column for each variable, with two additional columns for tick and `agent_id`.
+- `get_table_dataframe(table_name)` Create a pandas DataFrame from a particular table. 
 
 ##### Plotting
 
