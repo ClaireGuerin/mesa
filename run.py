@@ -1,8 +1,6 @@
 from swarm.model import Swarm
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import animation, rc
-from IPython.display import HTML, Image
 
 nAgents = 10
 nSteps = 20
@@ -17,11 +15,11 @@ agent_data = model.dataCollector.get_agent_vars_dataframe()
 #agent_data.head()
 
 plt.ion() # turn on interactive plotting
+colors = np.random.rand(nAgents)
 
 for step in range(nSteps):
 	x = agent_data.xs(step, level="Step")["XPosition"]
 	y = agent_data.xs(step, level="Step")["YPosition"]
-	colors = np.random.rand(nAgents)
 	# area = (30 * np.random.rand(nAgents))**2  # 0 to 15 point radii
 	plt.scatter(x, y, s=200, c=colors, alpha=0.5) # to change dot area: s=area
 	plt.xlim([0, spaceWidth])
