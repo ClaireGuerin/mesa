@@ -4,11 +4,12 @@ Compiled from the Mesa source code function definitions and from Claire Guerin's
 Mesa has two core objects, Agent and Model. These are the basics to build a Mesa ABM. `Agent` and `Model` each require a `step()` function which contains a single step for the / all individual(s). The `step()` function is used by the Scheduler of your choice. Schedulers are in the `mesa.time` module. *Some Schedulers also require an `advance()` function, which will apply the changes prepared in the `step()` function.*
 
 ## Table of Contents
-[Agent class](#agent)
-[Model class](#model)
-[Schedulers](#schedule)
-[Space](#space)
-[Data Collector](#collect)
+1. [Agent class](#agent)
+2. [Model class](#model)
+3. [Schedulers](#schedule)
+4. [Space](#space)
+5. [Data Collector](#collect)
+
 
 ## <a name="agent"></a>Agent class
 

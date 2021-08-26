@@ -23,7 +23,7 @@ Make sure you have Numpy installed in your Python environment.
 
 ## Usage
 
-For help understanding the Mesa framework, checkout [doc/MESAHELP](https://github.com/ClaireGuerin/mesa/blob/develop/doc/MESAHELP.md)
+For help understanding the Mesa framework, checkout [MESAHELP](https://github.com/ClaireGuerin/mesa/blob/develop/doc/MESAHELP.md)
 
 To run the default model, use command line `python run.py` in terminal.
 
