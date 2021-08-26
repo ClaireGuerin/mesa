@@ -189,6 +189,7 @@ A `DataCollector` is instantiated with dictionaries of names of model- and agent
 from mesa.datacollection import DataCollector
 
 def compute_mean(model):
+	# A function to compute summary statistic, will be used by the Data Collector
 	agent_x, agent_y = 0
 	n = 0
 	for agent in model.schedule.agents:
@@ -203,10 +204,10 @@ class myModel(Model):
 
 		self.dataCollector = DataCollector(
 			model_reporters={"Mean position": compute_mean},
-			agent_reporters={"ID": "unique_id"})
+			agent_reporters={"ID": "unique_id"}) # <- define Data Collector here
 
 	def step(self):
-		self.datacollector.collect(self)
+		self.datacollector.collect(self) # <- collect data here
         self.schedule.step()
 ```
 
