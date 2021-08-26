@@ -6,6 +6,11 @@ from flock.agent import Fish
 from flock.logging import *
 from flock.parameters import Parameters as Par
 
+def get_x_pos(model):
+    return model.pos[0]
+
+def get_y_pos(model):
+    return model.pos[1]
 
 class Swarm(Model):
     """A model with some number of Fish agents."""
@@ -17,7 +22,8 @@ class Swarm(Model):
         # - step() activates the agent and stages any necessary changes, but does not apply them yet. 
         # - advance() then applies the changes.
         self.dataCollector = DataCollector(
-            agent_reporters={"Position": "pos",
+            agent_reporters={"XPosition": get_x_pos,
+                             "YPosition": get_y_pos,
                              "Heading": "heading"})
         self.parameters = Par()
 
