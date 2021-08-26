@@ -3,7 +3,14 @@ Compiled from the Mesa source code function definitions and from Claire Guerin's
 
 Mesa has two core objects, Agent and Model. These are the basics to build a Mesa ABM. `Agent` and `Model` each require a `step()` function which contains a single step for the / all individual(s). The `step()` function is used by the Scheduler of your choice. Schedulers are in the `mesa.time` module. *Some Schedulers also require an `advance()` function, which will apply the changes prepared in the `step()` function.*
 
-## Agent class
+## Table of Contents
+[Agent class](#agent)
+[Model class](#model)
+[Schedulers](#schedule)
+[Space](#space)
+[Data Collector](#collect)
+
+## <a name="agent"></a>Agent class
 
 Attributes:
 - `unique_id` agent's unique id
@@ -13,7 +20,7 @@ Methods:
 - `step()` single step of the agent.
 - `advance()` apply agent's step. To use if scheduler = `SimultaneousActivation`.
 
-## Model class
+## <a name="model"></a>Model class
 
 Attributes:
 - `random` random-number generator. Works just like Python's random module, but with a fixed seed set when the model is instantiated, that can be used to replicate a specific model run later.
@@ -58,7 +65,7 @@ class myModel(Model):
 		self.schedule.step() # activate agents' steps according to the schedule, here at random.
 ``` 
 
-## Schedulers
+## <a name="schedule"></a>Schedulers
 
 ### BaseScheduler
 
@@ -86,7 +93,7 @@ Optional arguments:
 - `shuffle` If True, shuffle the order of agents each step.
 - `shuffle_between_stages` If True, shuffle the agents after eachstage; otherwise, only shuffle at the start of each step.
 
-## Space
+## <a name="space"></a>Space
 Mesa currently supports two overall kinds of spaces: grid, and continuous. Both grids and continuous spaces are frequently toroidal, meaning that the edges wrap around, with cells on the right edge connected to those on the left edge, and the top to the bottom. This prevents some cells having fewer neighbors than others, or agents being able to go off the edge of the environment. Import the space type of your choice from `mesa.space`.
 
 ### Grid
@@ -157,7 +164,7 @@ Network Grid where each node contains zero or more agents.
 - `get_all_cell_contents()`
 - `iter_cell_list_contents()`
 
-## Data Collector
+## <a name="collect"></a>Data Collector
 Handles data collection and storage for us and make it easier to analyze.
 The data collector stores three categories of data: model-level variables, agent-level variables, and tables (which are a catch-all for everything else). Model- and agent-level variables are added to the data collector along with a function for collecting them.
 A `DataCollector` is instantiated with dictionaries of names of model- and agent-level variables to collect, associated with attribute names or functions which actually collect them. When the `collect(...)` method is called, it collects these attributes and executes these functions one by one and stores the results.
