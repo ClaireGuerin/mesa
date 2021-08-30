@@ -1,8 +1,7 @@
 from mesa import Agent
-import logging
 import numpy as np
 import math as m
-from swarm.logging import *
+from swarm.log import *
 #import pytest
 from swarm.vectors import *
 

@@ -1,4 +1,5 @@
 from swarm.model import Swarm
+from swarm.log import *
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -28,3 +29,5 @@ for step in range(nSteps):
 	plt.draw()
 	plt.pause(0.1)
 	plt.clf() # clear current figure
+
+logging.info( "{}".format( agent_data["XPosition"].head() ) )

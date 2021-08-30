@@ -3,7 +3,7 @@ from mesa.space import ContinuousSpace
 from mesa.time import SimultaneousActivation
 from mesa.datacollection import DataCollector
 from swarm.agent import Fish
-from swarm.logging import *
+from swarm.log import *
 from swarm.parameters import Parameters as Par
 
 def get_x_pos(model):
