@@ -16,10 +16,10 @@ for i in range(nSteps):
 agent_data = model.dataCollector.get_agent_vars_dataframe()
 
 def data_stream():
-		"""Creates a Generator for data"""
-		for i in range(nSteps):
-			yield np.c_[agent_data.xs(i, level="Step")["XPosition"].values.tolist(), 
-						agent_data.xs(i, level="Step")["YPosition"].values.tolist()]
+	"""Creates a Generator for data"""
+	for i in range(nSteps):
+		yield np.c_[agent_data.xs(i, level="Step")["XPosition"].values.tolist(), 
+					agent_data.xs(i, level="Step")["YPosition"].values.tolist()]
 
 # stream = data_stream()
 
@@ -32,10 +32,10 @@ fig, ax = plt.subplots()
 
 """Initial drawing of the scatter plot."""
 #xy = next(stream)
-x = []
-y = []
+x = [None] * nAgents
+y = [None] * nAgents
 
-scat = ax.scatter(x, y, c=colors, s=200, vmin=0, vmax=1,
+scat = ax.scatter(x, y, c=colors, s=sizes, vmin=0, vmax=1,
 					cmap="jet", edgecolor="k")
 ax.axis([0, spaceWidth, 0, spaceHeight])
 
@@ -54,8 +54,9 @@ def update(frame):
 
 
 # Setup FuncAnimation.
-anim = animation.FuncAnimation(fig, update, frames=data_stream, interval=5, blit=True)
-plt.show()
+anim = animation.FuncAnimation(fig, update, frames=data_stream, interval=1000, blit=True)
+# plt.show()
+anim.save('img/agents_in_space.gif', writer='imagemagick', fps=60)
 
 # ###################################################################
 
