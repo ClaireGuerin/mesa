@@ -3,8 +3,8 @@ from swarm.animate import AnimationScatter as Animation
 
 nAgents = 300
 nSteps = 1000
-spaceWidth = 10000
-spaceHeight = 10000
+spaceWidth = 900
+spaceHeight = 900
 
 model = Swarm(nAgents, spaceWidth, spaceHeight) # number of individuals, x max, y max in continuous space (defaulted to x min = y min = 0)
 for i in range(nSteps):
