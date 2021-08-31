@@ -5,43 +5,53 @@ import numpy as np
 class AnimationScatter(object):
 	"Animate scatter plot data from a Pandas DataFrame"
 
-	def __init__(self, numtime, numpoints, width, height, data_generator):
+	def __init__(self, numtime, numpoints, width, height, data):
 		self.numtime = numtime
 		self.numpoints = numpoints
 		self.width = width
 		self.height = height
-		self.stream = data_generator
+		self.data = data
 
 		self.colors = np.random.rand(self.numpoints)
+		self.sizes = [200 for n in range(self.numpoints)]
 
-		# Setup figure and axes
+
+		# Initial drawing of the scatter plot.
+		## Setup figure and axes
 		self.fig, self.ax = plt.subplots()
-		# Setup FuncAnimation.
-		self.anim = animation.FuncAnimation(self.fig, self.update, interval=5,
-											init_func=self.setup_plot, blit=True)
+		x = [None] * self.numpoints
+		y = [None] * self.numpoints
 
-	def setup_plot(self):
-		"""Initial drawing of the scatter plot."""
-		xy = next(self.stream)
-		x = xy[1, :]
-		y = xy[2, :]
-
-		self.scat = self.ax.scatter(x, y, c=self.colors, s=200, vmin=0, vmax=1,
-									cmap="jet", edgecolor="k")
+		self.scat = self.ax.scatter(x, y, c=self.colors, s=self.sizes, vmin=0, vmax=1,
+								cmap="jet", edgecolor="k")
 		self.ax.axis([0, self.width, 0, self.height])
-		# For FuncAnimation's sake, we need to return the artist we'll be using
-		# Note that it expects a sequence of artists, thus the trailing comma.
-		return self.scat,
 
-	def update(self, i):
-		currentData = next(self.stream)
+		# Setup FuncAnimation.
+		# update the plot with update function, fed with subsequent frames from the data_stream generator function
+		self.anim = animation.FuncAnimation(self.fig, self.update, frames=self.data_stream, 
+											interval=500, blit=True)
+
+	def data_stream(self):
+		"""Creates a Generator for data"""
+		for i in range(self.numtime):
+			yield np.c_[self.data.xs(i, level="Step")["XPosition"].values.tolist(), 
+						self.data.xs(i, level="Step")["YPosition"].values.tolist()]
+
+	def update(self, frame):
+		currentData = frame
 		# Set x and y data
 		self.scat.set_offsets(currentData)
 		# Set sizes
-		self.scat.set_sizes([200 for n in range(self.numpoints)])
+		self.scat.set_sizes(self.sizes)
 		# Set colors
 		self.scat.set_array(self.colors)
 
 		# We need to return the updated artist for FuncAnimation to draw..
 		# Note that it expects a sequence of artists, thus the trailing comma.
 		return self.scat,
+
+	def save(self):
+		self.anim.save('img/agents_in_space.gif', writer='imagemagick', fps=2)
+
+if __name__ == '__main__':
+    print("This script cannot be run by itself")
