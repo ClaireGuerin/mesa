@@ -1,7 +1,7 @@
 from swarm.model import Swarm
 from swarm.animate import AnimationScatter as Animation
 
-nAgents = 300
+nAgents = 100
 nSteps = 1000
 spaceWidth = 900
 spaceHeight = 900
