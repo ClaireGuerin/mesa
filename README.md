@@ -8,7 +8,7 @@ In progress, starting stage
 
 ## Visuals
 
-Coming soon
+![agents in space](https://github.com/ClaireGuerin/mesa/blob/develop/img/agents_in_space.gif)
 
 ## Installation
 
