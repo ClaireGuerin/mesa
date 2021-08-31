@@ -50,8 +50,8 @@ class AnimationScatter(object):
 		# Note that it expects a sequence of artists, thus the trailing comma.
 		return self.scat,
 
-	def save(self):
-		self.anim.save('img/agents_in_space.gif', writer='imagemagick', fps=2)
+	def save(self, destination, fps):
+		self.anim.save(destination, writer='imagemagick', fps=fps)
 
 if __name__ == '__main__':
     print("This script cannot be run by itself")
