@@ -13,7 +13,7 @@ class Fish(Agent):
         self.heading = unit(np.array([init_x, init_y])) # heading vector of agent
 
     def head(self):
-        self.newHeading = self.align() + self.cohese() + self.separate()
+        self.newHeading = self.align() + self.cohese() + self.separate() + self.err()
         self.newPos = np.asarray(self.pos) + self.model.parameters.cruiseSpeed * self.newHeading
 
     def group(self, radius, include_center = False):
@@ -79,6 +79,13 @@ class Fish(Agent):
             return force(self.model.parameters.separationWeight, separationVector, len(separationGroup))
         else:
             return np.array([0, 0])
+
+    def err(self):
+        """ STOCHASTICITY
+            Random error in movement alignement based on others"""
+        errorX = self.model.random.gauss(0.0, 0.1)
+        errorY = self.model.random.gauss(0.0, 0.1)
+        return np.array([errorX, errorY])
 
         
     def step(self):

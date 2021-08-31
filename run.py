@@ -29,5 +29,3 @@ for step in range(nSteps):
 	plt.draw()
 	plt.pause(0.1)
 	plt.clf() # clear current figure
-
-logging.info( "{}".format( agent_data["XPosition"].head() ) )
