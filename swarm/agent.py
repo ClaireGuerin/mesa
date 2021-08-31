@@ -38,7 +38,10 @@ class Fish(Agent):
             return self.model.parameters.alignmentWeight * unit(alignmentDirection - self.heading)
 
         else:
-            return self.heading
+            # if there are no neighbors in the vicinity, the agent changes its heading at random
+            jitterX = self.model.random.gauss(0.0, 1.0)
+            jitterY = self.model.random.gauss(0.0, 1.0)
+            return self.heading + np.array([jitterX, jitterY])
 
     def cohese(self):
         """ COHESION
