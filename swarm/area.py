@@ -1,6 +1,6 @@
 from mesa.space import *
 from swarm.vectors import *
-from math import radians, atan2
+from math import radians, atan2, pi
 
 class Area(ContinuousSpace):
 	""" Child class of Mesa Subclass ContinuousSpace from Mesa Space
@@ -34,7 +34,7 @@ class Area(ContinuousSpace):
 			deltas = np.minimum(deltas, self.size - deltas)
 		dists = deltas[:, 0] ** 2 + deltas[:, 1] ** 2
 
-		(idxs,) = np.where(dists <= radius ** 2)
+		(idxs1,) = np.where(dists <= radius ** 2)
 
 
 		# 2) outside of blind spot (in the back, and in the front if True), i.e. 
@@ -47,14 +47,17 @@ class Area(ContinuousSpace):
 		alpha = radians(blind_angle)
 		beta = angle(focal_heading) 
 		gamma = np.atan2( self._agent_points - np.array(pos) ) # WARNING: 
-		# returns value between -Pi and Pi, 
+		# atan2 returns value between -Pi and Pi, 
 		# should check whether this is automatically translated
+
+		(idxs2,) = np.where(gamma > beta + pi + alpha / 2 | gamma < beta + pi - alpha / 2)
 
 
 		# Get neighbors
+		intersect = np.intersect1d(idxs1, idxs2, assume_unique=True)
 
 		neighbors_no_blind_spot = [
-			self._index_to_agent[x] for x in idxs if include_center or dists[x] > 0
+			self._index_to_agent[x] for x in intersect if include_center or dists[x] > 0
 		]
 		
 
