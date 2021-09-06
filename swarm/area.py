@@ -9,10 +9,10 @@ class Area(ContinuousSpace):
 		self, 
 		pos: FloatCoordinate, 
 		radius: float, 
-		include_center: bool = True,
 		focal_heading: list,
 		blind_angle: float,
-		front: bool = False
+		include_center: bool = True,
+		include_front: bool = False
 	) -> List[GridContent]:
 		"""Get all objects within a certain radius.
 		Args:
@@ -46,8 +46,8 @@ class Area(ContinuousSpace):
 
 		alpha = radians(blind_angle)
 		beta = angle(focal_heading) 
-		gamma = np.atan2( self._agent_points - np.array(pos) ) # WARNING: 
-		# atan2 returns value between -Pi and Pi, 
+		gamma = np.arctan2( self._agent_points - np.array(pos) ) # WARNING: 
+		# arctan2 returns value between -Pi and Pi, 
 		# should check whether this is automatically translated
 
 		(idxs2,) = np.where(gamma > beta + pi + alpha / 2 | gamma < beta + pi - alpha / 2)
