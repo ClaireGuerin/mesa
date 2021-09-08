@@ -1,7 +1,7 @@
 from mesa import Model
 from mesa.time import SimultaneousActivation
 from mesa.datacollection import DataCollector
-from swarm.area import Area
+from swarm.area import SwarmSpace
 from swarm.agent import Fish
 from swarm.log import *
 from swarm.parameters import Parameters as Par
@@ -16,7 +16,7 @@ class Swarm(Model):
     """A model with some number of Fish agents."""
     def __init__(self, N, x_max, y_max):
         self.nAgents = N
-        self.space = Area(x_max, y_max, True)
+        self.space = SwarmSpace(x_max, y_max, True)
         self.schedule = SimultaneousActivation(self) # scheduler, with simultaneous activation of all the agents.
         # This scheduler requires that each agent have two methods: step and advance.
         # - step() activates the agent and stages any necessary changes, but does not apply them yet. 
