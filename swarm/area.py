@@ -14,7 +14,8 @@ class SwarmSpace(ContinuousSpace):
 		include_center: bool = True,
 		include_front: bool = False
 	) -> List[GridContent]:
-		"""Get all objects within a certain radius.
+		""" Get all objects within a certain radius.
+			Works for any blind angle < pi radians (i.e. < 180 degrees)
 		Args:
 			pos: (x,y) coordinate tuple to center the search at.
 			radius: Get all the objects within this distance of the center.
@@ -51,14 +52,22 @@ class SwarmSpace(ContinuousSpace):
 
 		alpha = radians(blind_angle % 360) 	# converts degrees to radians on the unit circle
 											# (between 0 and 2pi)
-		beta = angle(focal_heading) # angle of focal direction with x+ axis
-									# in radians (between 0 and 2pi)
-		gamma = [angle(agentpos - np.array(pos)) for agentpos in self._agent_points] # angle of each agent's position with x+ axis
-																	 				 # if focal pos were to be the center
-																	 				 # in radians (between 0 and 2pi)
+		beta = normalize(angle(focal_heading))  # angle of focal direction with x+ axis
+												# in radians (between 0 and 2pi)
+		gamma = [normalize(angle( agentpos - np.array(pos) )) for agentpos in self._agent_points] 
+		# angle of each agent's position with x+ axis
+		# if focal pos were to be the center
+		# in radians (between 0 and 2pi)
 
 		(idxs2,) = np.where(gamma > beta + pi + alpha / 2)
 		(idxs3,) = np.where(gamma < beta + pi - alpha / 2)
+
+		if include_front:
+			(idxs4,) = np.where(gamma > beta + alpha / 2)
+			(idxs5,) = np.where(gamma < beta - alpha / 2)
+		else:
+			idxs4 = np.array([])
+			idxs5 = np.array([])
 
 
 		# Get neighbors

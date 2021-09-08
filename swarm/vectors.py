@@ -22,10 +22,12 @@ def force(weight, sumVec, n):
 
 def angle(vec):
 	""" Returns the angle in radians of a vector vec with the positive x-axis +x
-		θ in [-pi, pi]
-	    θ = arctan2(y, x) 
+		theta in [-pi, pi]
+	    theta = arctan2(y, x) 
 	    !!! y before x !!!"""
-	theta = np.arctan2(vec[1], vec[0]) 
-	# arctan2 gives an angle in radians between -pi and pi
-	# we want an angle in radians between 0 and 2pi:
-	return theta if theta >= 0 else 2 * np.pi + theta
+	return np.arctan2(vec[1], vec[0])
+	
+def normalize(ang):
+	# sometimes an angle in radians is between -pi and pi
+	# this function transforms an angle in radians between 0 and 2pi:
+	return ang if ang >= 0 else 2 * np.pi + ang
