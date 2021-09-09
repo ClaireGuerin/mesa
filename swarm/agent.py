@@ -13,17 +13,24 @@ class Fish(Agent):
         self.heading = unit(np.array([init_x, init_y])) # heading vector of agent
 
     def head(self):
-        self.newHeading = self.align() + self.cohese() + self.separate()
+        self.newHeading = self.align() + self.cohese() + self.separate() + self.err()
         self.newPos = np.asarray(self.pos) + self.model.parameters.cruiseSpeed * self.newHeading
 
-    def group(self, radius, include_center = False):
+    def group(self, radius, angle, include_front = False, include_center = False):
          # pos: FloatCoordinate, radius: float, include_center: bool = True
-        self.model.space.get_neighbors(self.pos, radius, include_center)
+        self.model.space.get_neighbors( pos=self.pos, 
+                                        radius=radius, 
+                                        focal_heading=self.heading, 
+                                        blind_angle=angle, 
+                                        include_center=include_center,
+                                        include_front=include_front)
 
     def align(self):
         """ ALIGNMENT """
 
-        alignmentGroup = self.group(self.model.parameters.alignmentRadius)
+        alignmentGroup = self.group(radius=self.model.parameters.alignmentRadius,
+                                    angle=self.model.parameters.alignmentAngle,
+                                    include_front=True)
 
         if alignmentGroup:
             # if there are other agents within the alignement area:
@@ -38,13 +45,17 @@ class Fish(Agent):
             return self.model.parameters.alignmentWeight * unit(alignmentDirection - self.heading)
 
         else:
-            return self.heading
+            # if there are no neighbors in the vicinity, the agent changes its heading at random
+            jitterX = self.model.random.gauss(0.0, 1.0)
+            jitterY = self.model.random.gauss(0.0, 1.0)
+            return self.heading + np.array([jitterX, jitterY])
 
     def cohese(self):
         """ COHESION
         attraction to the center of gravity of the group within the cohesion area """
 
-        cohesionGroup = self.group(self.model.parameters.cohesionRadius)
+        cohesionGroup = self.group( radius=self.model.parameters.cohesionRadius,
+                                    angle=self.model.parameters.cohesionAngle)
 
         if cohesionGroup:
             # if there are other agents within the cohesion area:
@@ -62,7 +73,8 @@ class Fish(Agent):
     def separate(self):
         """ SEPARATION """
 
-        separationGroup = self.group(self.model.parameters.separationRadius)
+        separationGroup = self.group(   radius=self.model.parameters.separationRadius,
+                                        angle=self.model.parameters.separationAngle)
 
         if separationGroup:
             # if there are other agents within the separation area:
@@ -76,6 +88,13 @@ class Fish(Agent):
             return force(self.model.parameters.separationWeight, separationVector, len(separationGroup))
         else:
             return np.array([0, 0])
+
+    def err(self):
+        """ STOCHASTICITY
+            Random error in movement alignement based on others"""
+        errorX = self.model.random.gauss(0.0, 0.1)
+        errorY = self.model.random.gauss(0.0, 0.1)
+        return np.array([errorX, errorY])
 
         
     def step(self):

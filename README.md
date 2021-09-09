@@ -4,7 +4,19 @@ Agent based modelling with Python's Mesa package. Reproduces fish schools swarmi
 
 ## Project Status
 
-In progress, starting stage
+In Progress
+
+### Functionalities
+
+Swarm Agents update their heading based on:
+- alignement zone
+- cohesion zone
+- separation zone
+- noise
+
+Swarm agents lack these features:
+- blind zone
+- speed adjustment
 
 ## Visuals
 
@@ -26,6 +38,14 @@ Make sure you have Numpy installed in your Python environment.
 For help understanding the Mesa framework, checkout [MESAHELP](https://github.com/ClaireGuerin/mesa/blob/develop/doc/MESAHELP.md)
 
 To run the default model, use command line `python run.py` in terminal.
+To reproduce the animation in Visuals, use command line `python make_animation.py` in terminal.
+
+### Classes
+
+- `SwarmAgent` in `agent.py`. A child class of Mesa's `Agent` class
+- `ModelAgent` in `model.py`. A child class of Mesa's `Model` class
+- `Area` in `area.py`. A child class of Mesa's `ContinuousSpace` class
+- `AnimationScatter` in `animate.py`. Creates animations of graphical output.
 
 ## Support 
 
