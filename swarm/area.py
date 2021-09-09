@@ -60,11 +60,11 @@ class SwarmSpace(ContinuousSpace):
 		# in radians (between 0 and 2pi)
 
 		(idxs2,) = np.where(gamma > beta + pi + alpha / 2)
-		(idxs3,) = np.where(gamma < beta + pi - alpha / 2)
+		(idxs3,) = np.where(gamma < normalize(beta + pi - alpha / 2))
 
 		if include_front:
 			(idxs4,) = np.where(gamma > beta + alpha / 2)
-			(idxs5,) = np.where(gamma < beta - alpha / 2)
+			(idxs5,) = np.where(gamma < normalize(beta - alpha / 2))
 		else:
 			idxs4 = np.array([])
 			idxs5 = np.array([])
