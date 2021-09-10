@@ -27,7 +27,9 @@ def angle(vec):
 	    !!! y before x !!!"""
 	return np.arctan2(vec[1], vec[0])
 	
-def normalize(ang):
-	# sometimes an angle in radians is between -pi and pi
-	# this function transforms an angle in radians between 0 and 2pi:
-	return ang if ang >= 0 else 2 * np.pi + ang
+def pi2pi(ang):
+	# sometimes an angle in radians is between -pi and pi,
+	# or, after some calculations, it can become > 2pi or even < -pi
+	# this function transforms an angle in radians between 0 and 2pi.
+
+	return (2 * np.pi + ang) % (2 * np.pi)

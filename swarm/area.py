@@ -40,7 +40,7 @@ class SwarmSpace(ContinuousSpace):
 			deltas = np.minimum(deltas, self.size - deltas)
 		dists = deltas[:, 0] ** 2 + deltas[:, 1] ** 2
 
-		(idxs1,) = np.where(dists <= radius ** 2)
+		(idxsDist,) = np.where(dists <= radius ** 2)
 
 
 		# 2) outside of blind spot (in the back, and in the front if True), i.e. 
@@ -52,26 +52,26 @@ class SwarmSpace(ContinuousSpace):
 
 		alpha = radians(blind_angle % 360) 	# converts degrees to radians on the unit circle
 											# (between 0 and 2pi)
-		beta = normalize(angle(focal_heading))  # angle of focal direction with x+ axis
+		beta = pi2pi(angle(focal_heading))  # angle of focal direction with x+ axis
 												# in radians (between 0 and 2pi)
-		gamma = [normalize(angle( agentpos - np.array(pos) )) for agentpos in self._agent_points] 
+		gamma = [pi2pi(angle( agentpos - np.array(pos) )) for agentpos in self._agent_points] 
 		# angle of each agent's position with x+ axis
 		# if focal pos were to be the center
 		# in radians (between 0 and 2pi)
 
-		(idxs2,) = np.where(gamma > beta + pi + alpha / 2)
-		(idxs3,) = np.where(gamma < normalize(beta + pi - alpha / 2))
+		(idxs1,) = np.where(gamma > pi2pi(beta + pi + alpha / 2))
+		(idxs2,) = np.where(gamma < pi2pi(beta + pi - alpha / 2))
+		idxsBack = np.intersect1d(idxs1, idxs2, assume_unique=True)
 
 		if include_front:
-			(idxs4,) = np.where(gamma > beta + alpha / 2)
-			(idxs5,) = np.where(gamma < normalize(beta - alpha / 2))
+			(idxs1,) = np.where(gamma > pi2pi(beta + alpha / 2))
+			(idxs2,) = np.where(gamma < pi2pi(beta - alpha / 2))
+			idxsFront = np.intersect1d(idxs1, idxs2, assume_unique=True)
+			# Get neighbours
+			intersect = np.intersect1d(np.intersect1d(idxsDist, idxsBack, assume_unique=True), idxsFront, assume_unique=True)
 		else:
-			idxs4 = np.array([])
-			idxs5 = np.array([])
-
-
-		# Get neighbors
-		intersect = np.intersect1d(np.intersect1d(idxs1, idxs2, assume_unique=True), idxs3, assume_unique=True)
+			# Get neighbours
+			intersect = np.intersect1d(idxsDist, idxsBack, assume_unique=True)
 
 		neighbors = [
 			self._index_to_agent[x] for x in intersect if include_center or dists[x] > 0
