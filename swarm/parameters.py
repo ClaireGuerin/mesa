@@ -1,14 +1,17 @@
 class Parameters(object):
 
 	def __init__(self):
-		self.cohesionRadius = 2
-		self.alignmentRadius = 5
-		self.separationRadius = 15
-		self.cohesionWeight = float(1/3)
-		self.alignmentWeight = float(1/3)
-		self.separationWeight = float(1/3)
-		self.cohesionAngle = 60
-		self.alignmentAngle = 60
-		self.separationAngle = 90
+		self.cohesionRadius = 2 # in body length (BL)
+		self.alignmentRadius = 5 # in BL
+		self.separationRadius = 15 # in BL
+		self.cohesionWeight = 9 # in BM/s^2
+		self.alignmentWeight = 5 # in BM/s^2
+		self.separationWeight = 10 # in BM/s^2
+		self.cohesionAngle = 60 # in degrees
+		self.alignmentAngle = 60 # in degrees
+		self.separationAngle = 90 # in degrees
 
-		self.cruiseSpeed = 2.0  # speed in body length / s
+		self.randomNoise = 0.5
+
+		self.cruiseSpeed = 2.0  # cruise speed in BL/s.
+		self.relaxationTime = 0.2 # characteristic time scale for the return to cruise speed, in s.

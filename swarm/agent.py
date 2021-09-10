@@ -11,6 +11,7 @@ class Fish(Agent):
     def __init__(self, unique_id, model, init_x, init_y):
         super().__init__(unique_id, model)
         self.heading = unit(np.array([init_x, init_y])) # heading vector of agent
+        self.speed = 1.8 # current speed of the individual. UPDATE???
 
     def group(self, radius, angle, include_front = False, include_center = False):
          # pos: FloatCoordinate, radius: float, include_center: bool = True
@@ -88,10 +89,20 @@ class Fish(Agent):
     def err(self):
         """ STOCHASTICITY
             Random error in movement alignement based on others"""
-        errorX = self.model.random.gauss(0.0, 0.1)
-        errorY = self.model.random.gauss(0.0, 0.1)
+        errorX = self.model.random.gauss(0.0, self.model.parameters.randomNoise)
+        errorY = self.model.random.gauss(0.0, self.model.parameters.randomNoise)
         return np.array([errorX, errorY])
 
+    def adjust_speed(self):
+        """ ADJUST OWN SPEED BASED ON OTHERS< TO AVOID COLLISION OR REJOIN THE GROUP
+            From Hemelrijk & Hildenbrandt 2008:
+            (1 / tau) * (v0 - v) * x, where:
+            - tau = relaxation time, fixed parameter
+            - v0 = cruise speed
+            - v = current scalar speed, agent characteristic
+            - x = x-coordinate of the agent's current heading """
+        return (1 / self.model.parameters.relaxationTime) * (self.model.parameters.cruiseSpeed - self.speed) * self.heading[0]
+        
         
     def step(self):
         """ The agent takes into account three areas:
@@ -100,7 +111,7 @@ class Fish(Agent):
         - separation (radius defaulted to 15) """
 
         # Calculate new HEADING and POS according to others
-        self.newHeading = self.align() + self.cohese() + self.separate() + self.err()
+        self.newHeading = self.align() + self.cohese() + self.separate() + self.err() + self.adjust_speed()
         self.newPos = np.asarray(self.pos) + self.model.parameters.cruiseSpeed * self.newHeading
                
     def advance(self):
