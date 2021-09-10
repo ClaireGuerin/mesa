@@ -11,7 +11,7 @@ class Fish(Agent):
     def __init__(self, unique_id, model, init_x, init_y):
         super().__init__(unique_id, model)
         self.heading = unit(np.array([init_x, init_y])) # heading vector of agent
-        self.speed = 1.8 # current speed of the individual. UPDATE???
+        self.speed = 2 # current speed of the individual. Initially, the same as cruise speed. UPDATE???
 
     def group(self, radius, angle, include_front = False, include_center = False):
          # pos: FloatCoordinate, radius: float, include_center: bool = True
@@ -112,6 +112,8 @@ class Fish(Agent):
 
         # Calculate new HEADING and POS according to others
         self.newHeading = self.align() + self.cohese() + self.separate() + self.err() + self.adjust_speed()
+        self.newSpeed = magnitude(self.newHeading)
+        assert not self.newSpeed != self.newSpeed, self.newSpeed # Checking isnan
         self.newPos = np.asarray(self.pos) + self.model.parameters.cruiseSpeed * self.newHeading
                
     def advance(self):
@@ -119,4 +121,5 @@ class Fish(Agent):
         logging.info("Agent {0} moves from {1}".format(self.unique_id, self.pos))      
         self.model.space.move_agent(self, self.newPos)
         self.heading = self.newHeading
+        # self.speed = self.newSpeed # this lines creates a bug
         logging.info(" to {0}\n".format(self.pos))
