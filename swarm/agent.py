@@ -12,10 +12,6 @@ class Fish(Agent):
         super().__init__(unique_id, model)
         self.heading = unit(np.array([init_x, init_y])) # heading vector of agent
 
-    def head(self):
-        self.newHeading = self.align() + self.cohese() + self.separate() + self.err()
-        self.newPos = np.asarray(self.pos) + self.model.parameters.cruiseSpeed * self.newHeading
-
     def group(self, radius, angle, include_front = False, include_center = False):
          # pos: FloatCoordinate, radius: float, include_center: bool = True
         self.model.space.get_neighbors( pos=self.pos, 
@@ -103,8 +99,9 @@ class Fish(Agent):
         - alignment (radius defaulted to 5)
         - separation (radius defaulted to 15) """
 
-        # Update HEADING according to others
-        self.head()
+        # Calculate new HEADING and POS according to others
+        self.newHeading = self.align() + self.cohese() + self.separate() + self.err()
+        self.newPos = np.asarray(self.pos) + self.model.parameters.cruiseSpeed * self.newHeading
                
     def advance(self):
         """Apply changes incurred in step(), i.e. update agent's position and heading"""  
