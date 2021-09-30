@@ -35,11 +35,11 @@ class Fish(Agent):
             alignmentVector = np.array([0, 0])
 
             for neighbor in alignmentGroup:
-                alignmentVector += neighbor.heading
+                alignmentVector += neighbor.heading[0]
 
             alignmentDirection = direction( alignmentVector, len(alignmentGroup) )
 
-            return self.model.parameters.alignmentWeight * unit(alignmentDirection - self.heading)
+            return self.model.parameters.alignmentWeight * unit(alignmentDirection - self.heading[0])
 
         else:
             # if there are no neighbors in the vicinity, the agent changes its heading at random
@@ -103,7 +103,6 @@ class Fish(Agent):
             - x = x-coordinate of the agent's current heading """
         return (1 / self.model.parameters.relaxationTime) * (self.model.parameters.cruiseSpeed - self.speed) * self.heading[0]
         
-        
     def step(self):
         """ The agent takes into account three areas:
         - cohesion (radius defaulted to 2)
@@ -111,7 +110,7 @@ class Fish(Agent):
         - separation (radius defaulted to 15) """
 
         # Calculate new HEADING and POS according to others
-        self.newHeading = self.align() + self.cohese() + self.separate() + self.err() + self.adjust_speed()
+        self.newHeading = self.align() + self.cohese() + self.separate() + self.err() #+ self.adjust_speed()
         self.newSpeed = magnitude(self.newHeading)
         assert not self.newSpeed != self.newSpeed, self.newSpeed # Checking isnan
         # self.newPos = np.asarray(self.pos) + self.model.parameters.cruiseSpeed * self.newHeading
