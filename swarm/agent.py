@@ -78,7 +78,7 @@ class Fish(Agent):
 
             separationVector = np.array([0, 0])
 
-            for neighbor in cohesionGroup:
+            for neighbor in separationGroup:
                 distance = np.asarray(neighbor.pos) - np.asarray(self.pos)
                 separationVector += distance / ( magnitude(distance) * magnitude(distance) )
 
@@ -94,7 +94,7 @@ class Fish(Agent):
         return np.array([errorX, errorY])
 
     def adjust_speed(self):
-        """ ADJUST OWN SPEED BASED ON OTHERS< TO AVOID COLLISION OR REJOIN THE GROUP
+        """ ADJUST OWN SPEED BASED ON OTHERS TO AVOID COLLISION OR REJOIN THE GROUP
             From Hemelrijk & Hildenbrandt 2008:
             (1 / tau) * (v0 - v) * x, where:
             - tau = relaxation time, fixed parameter
@@ -120,8 +120,7 @@ class Fish(Agent):
     def advance(self):
         """Apply changes incurred in step(), i.e. update agent's position and heading"""  
         logging.info("Agent {0} moves from {1}".format(self.unique_id, self.pos))  
-        assert self.newPos[0] is not None, self.newPos[0]
-        assert self.newPos[1] is not None, self.newPos[1]  
+        assert np.isnan(self.newPos).any, "{1},{0}".format(np.isnan(self.newPos), self.newPos)
         self.model.space.move_agent(self, self.newPos)
         self.heading = self.newHeading
         self.speed = self.newSpeed # this line creates a bug
