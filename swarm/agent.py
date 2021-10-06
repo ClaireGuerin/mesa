@@ -110,7 +110,7 @@ class Fish(Agent):
         - separation (radius defaulted to 15) """
 
         # Calculate new HEADING and POS according to others
-        self.newHeading = self.align() + self.cohese() + self.separate() + self.err() #+ self.adjust_speed()
+        self.newHeading = self.align() + self.cohese() + self.separate() + self.err() + self.adjust_speed()
         self.newSpeed = magnitude(self.newHeading)
         assert not self.newSpeed != self.newSpeed, self.newSpeed # Checking isnan
         # self.newPos = np.asarray(self.pos) + self.model.parameters.cruiseSpeed * self.newHeading
@@ -120,7 +120,9 @@ class Fish(Agent):
         """Apply changes incurred in step(), i.e. update agent's position and heading"""  
         logging.info("Agent {0} moves from {1}".format(self.unique_id, self.pos))  
         assert np.isnan(self.newPos).any, "{1},{0}".format(np.isnan(self.newPos), self.newPos)
-        self.model.space.move_agent(self, self.newPos)
+        self.model.space.move_agent(self, tuple(self.newPos))
+        assert type(self.pos) is tuple, type(self.pos)
+        assert self.pos == tuple(self.newPos), "Self position is {0} when it should be {1}".format(self.pos, self.newPos)
         self.heading = self.newHeading
         self.speed = self.newSpeed # this line creates a bug
-        logging.info(" to {0}\n".format(self.pos))
+        logging.info(" to {0}, speed = {1}, heading = {2}\n".format(self.pos, self.speed, self.heading))
