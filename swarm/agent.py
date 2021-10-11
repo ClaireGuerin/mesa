@@ -2,7 +2,6 @@ from mesa import Agent
 import numpy as np
 import math as m
 from swarm.log import *
-#import pytest
 from swarm.vectors import *
 
 class Fish(Agent):
