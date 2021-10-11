@@ -121,8 +121,6 @@ class Fish(Agent):
         logging.info("Agent {0} moves from {1}".format(self.unique_id, self.pos))  
         assert np.isnan(self.newPos).any, "{1},{0}".format(np.isnan(self.newPos), self.newPos)
         self.model.space.move_agent(self, tuple(self.newPos))
-        assert type(self.pos) is tuple, type(self.pos)
-        assert self.pos == tuple(self.newPos), "Self position is {0} when it should be {1}".format(self.pos, tuple(self.newPos))
         self.heading = self.newHeading
         self.speed = self.newSpeed # this line creates a bug
         logging.info(" to {0}, speed = {1}, heading = {2}\n".format(self.pos, self.speed, self.heading))
