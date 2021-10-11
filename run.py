@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 nAgents = 10
-nSteps = 20
-spaceWidth = 5
-spaceHeight = 5
+nSteps = 9
+spaceWidth = 500
+spaceHeight = 500
 
 model = Swarm(nAgents, spaceWidth, spaceHeight) # number of individuals, x max, y max in continuous space (defaulted to x min = y min = 0)
 for i in range(nSteps):

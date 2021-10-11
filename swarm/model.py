@@ -28,6 +28,8 @@ class Swarm(Model):
         self.parameters = Par()
 
         logging.info('Creating model...\n')
+        x = self.random.randrange(1, self.space.width)
+        y = self.random.randrange(1, self.space.height)
         
         # Create agents
         for i in range(self.nAgents):
@@ -35,8 +37,8 @@ class Swarm(Model):
 
             # Give the agent a random position in space
             # Using the model's random generator
-            x = self.random.randrange(1, self.space.width)
-            y = self.random.randrange(1, self.space.height)
+            """ x = self.random.randrange(1, self.space.width)
+            y = self.random.randrange(1, self.space.height) """
 
             fishAgent = Fish(i, self, x, y)
 
