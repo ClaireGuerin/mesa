@@ -79,15 +79,3 @@ class SwarmSpace(ContinuousSpace):
 		]
 
 		return neighbors
-
-	def move_agent(self, agent: Agent, pos: FloatCoordinate) -> None:
-		pos = self.torus_adj(pos)
-		idx = self._agent_to_index[agent]
-		assert type(idx) is int, "Type {0}: {1}".format(idx, type(idx))
-		assert idx >= 0, "{} < 0".format(idx)
-		assert type(pos) is tuple, "Type {0} is {1}".format(pos, type(pos))
-		assert len(pos) == 2, "More than 2 coordinates ({})".format(len(pos))
-		assert pos[0] == pos[0], "x coord is nan: {0}, {1}".format(pos[0], type(pos[0]))
-		assert pos[1] == pos[1], "y coord is nan"
-		self._agent_points[idx] = pos
-		agent.pos = pos
