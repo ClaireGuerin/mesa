@@ -31,12 +31,12 @@ class Fish(Agent):
         if alignmentGroup:
             # if there are other agents within the alignement area:
 
-            alignmentVector = np.array([0, 0])
+            alignmentValue = 0
 
             for neighbor in alignmentGroup:
-                alignmentVector += neighbor.heading[0]
+                alignmentValue += neighbor.heading[0]
 
-            alignmentDirection = direction( alignmentVector, len(alignmentGroup) )
+            alignmentDirection = direction( alignmentValue, len(alignmentGroup) )
 
             return self.model.parameters.alignmentWeight * unit(alignmentDirection - self.heading[0])
 

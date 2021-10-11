@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 nAgents = 10
-nSteps = 3
+nSteps = 20
 spaceWidth = 500
 spaceHeight = 500
 
