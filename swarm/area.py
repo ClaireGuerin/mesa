@@ -1,6 +1,15 @@
 from mesa.space import *
 from swarm.vectors import *
 from math import radians, pi
+from swarm.log import *
+
+""" def err_handler(type, flag):
+	print("Floating point error (%s), with flag %s" % (type, flag))
+
+saved_handler = np.seterrcall(err_handler)
+save_err = np.seterr(all='call') """
+
+np.seterr(all='raise')
 
 class SwarmSpace(ContinuousSpace):
 	""" Child class of Mesa Subclass ContinuousSpace from Mesa Space
@@ -79,3 +88,24 @@ class SwarmSpace(ContinuousSpace):
 		]
 
 		return neighbors
+
+	def torus_adj(self, pos: FloatCoordinate) -> FloatCoordinate:
+		"""Adjust coordinates to handle torus looping. 
+		If the coordinate is out-of-bounds and the space is toroidal, return the corresponding point within the space. 
+		If the space is not toroidal, raise an exception.
+		Args:
+			pos: Coordinate tuple to convert."""
+		if not self.out_of_bounds(pos):
+			return pos
+		elif not self.torus:
+			raise Exception("Point out of bounds, and space non-toroidal.")
+		else:
+			try:
+				x = self.x_min + ((pos[0] - self.x_min) % self.width)
+				y = self.y_min + ((pos[1] - self.y_min) % self.height)
+				if isinstance(pos, tuple):
+					return (x, y)
+				else:
+					return np.array((x, y))
+			except FloatingPointError as e:
+				logging.info("Got error {0}, with position: {1}".format(e, pos))
