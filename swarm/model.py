@@ -16,7 +16,7 @@ class Swarm(Model):
     """A model with some number of Fish agents."""
     def __init__(self, N, x_max, y_max):
         self.nAgents = N
-        self.space = SwarmSpace(x_max, y_max, True)
+        self.space = SwarmSpace(x_max, y_max, False)
         self.schedule = SimultaneousActivation(self) # scheduler, with simultaneous activation of all the agents.
         # This scheduler requires that each agent have two methods: step and advance.
         # - step() activates the agent and stages any necessary changes, but does not apply them yet. 
