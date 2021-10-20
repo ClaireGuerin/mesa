@@ -13,7 +13,8 @@ np.seterr(all='raise')
 
 class SwarmSpace(ContinuousSpace):
 	""" Child class of Mesa Subclass ContinuousSpace from Mesa Space
- 		Overwrites get_neighbors method to include blind spot(s) """
+ 		Overwrites get_neighbors method to include blind spot(s)
+   		Overwrites torus_adj to accept border vs torus"""
    
 	def get_neighbors(
 		self, 
@@ -92,7 +93,7 @@ class SwarmSpace(ContinuousSpace):
 	def torus_adj(self, pos: FloatCoordinate) -> FloatCoordinate:
 		"""Adjust coordinates to handle torus looping. 
 		If the coordinate is out-of-bounds and the space is toroidal, return the corresponding point within the space. 
-		If the space is not toroidal, raise an exception.
+		If the space is not toroidal, use boundaries.
 		Args:
 			pos: Coordinate tuple to convert."""
 		if not self.out_of_bounds(pos):
@@ -109,3 +110,17 @@ class SwarmSpace(ContinuousSpace):
 					return np.array((x, y))
 			except FloatingPointError as e:
 				logging.info("Got error {0}, with position: {1}".format(e, pos))
+		
+	def out_of_bounds(self, dist_max: float, pos: FloatCoordinate, h: FloatCoordinate = np.array([0,0])) -> bool:
+		"""Check if a point is out of bounds, or nearing a border.
+  			NB: in the future, dist_max should be an init parameter"""
+		x, y = pos
+
+		if self.torus:
+			return x < self.x_min or x >= self.x_max or y < self.y_min or y >= self.y_max
+		else:
+			# distance to wall (bottom, top, left, right)
+  			# for now, let's do brute force: vertical / horizontal distance to the 4 walls
+			# later on, take into account heading
+			dist_to_wall_btlr = (np.array([self.y_min, self.y_max, self.x_min, self.x_max]) - np.array([y, y, x, x])) < dist_max
+			return (np.any(dist_to_wall_btlr), np.where(dist_to_wall_btlr))
