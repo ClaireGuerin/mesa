@@ -28,8 +28,10 @@ class Swarm(Model):
         self.parameters = Par()
 
         logging.info('Creating model...\n')
-        x = self.random.randrange(1, self.space.width)
-        y = self.random.randrange(1, self.space.height)
+        #x = self.random.randrange(1, self.space.width)
+        #y = self.random.randrange(1, self.space.height)
+        x = 0
+        y = 0
         
         # Create agents
         for i in range(self.nAgents):

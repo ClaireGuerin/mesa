@@ -8,7 +8,7 @@ def unit(vec):
 	""" Returns the unit vector of vec"""
 	mag = magnitude(vec)
 	if mag == 0.0:
-		return 0.0
+		return np.array([0.0, 0.0])
 	else:
 		return vec / magnitude(vec)
 

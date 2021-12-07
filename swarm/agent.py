@@ -102,6 +102,18 @@ class Fish(Agent):
             - x = x-coordinate of the agent's current heading """
         return (1 / self.model.parameters.relaxationTime) * (self.model.parameters.cruiseSpeed - self.speed) * self.heading[0]
         
+    def steer_away_from_borders(self):
+        steering_vector = np.zeros(2)
+        d = self.model.parameters.border_distance
+        s = self.model.parameters.border_strength 
+        for i in range(2):
+            if self.pos[i] < d:
+                steering_vector[i] += s
+            elif self.pos[i] > self.model.space.size[i] - d:
+                steering_vector[i] -= s
+                
+        return steering_vector
+        
     def step(self):
         """ The agent takes into account three areas:
         - cohesion (radius defaulted to 2)
@@ -109,7 +121,7 @@ class Fish(Agent):
         - separation (radius defaulted to 15) """
 
         # Calculate new HEADING and POS according to others
-        self.newHeading = self.align() + self.cohese() + self.separate() + self.err() + self.adjust_speed()
+        self.newHeading = self.align() + self.cohese() + self.separate() + self.err() + self.adjust_speed() + self.steer_away_from_borders()
         self.newSpeed = magnitude(self.newHeading)
         assert not self.newSpeed != self.newSpeed, self.newSpeed # Checking isnan
         # self.newPos = np.asarray(self.pos) + self.model.parameters.cruiseSpeed * self.newHeading

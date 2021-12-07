@@ -3,10 +3,10 @@ from swarm.log import *
 import matplotlib.pyplot as plt
 import numpy as np
 
-nAgents = 50
+nAgents = 30
 nSteps = 20
-spaceWidth = 500
-spaceHeight = 500
+spaceWidth = 50
+spaceHeight = 50
 
 model = Swarm(nAgents, spaceWidth, spaceHeight) # number of individuals, x max, y max in continuous space (defaulted to x min = y min = 0)
 for i in range(nSteps):

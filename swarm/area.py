@@ -96,20 +96,12 @@ class SwarmSpace(ContinuousSpace):
         If the space is not toroidal, use boundaries.
         Args:
             pos: Coordinate tuple to convert."""
-        is_out_, by_= self.out_of_bounds(pos, 10)
-        if not is_out_:
+        if not self.out_of_bounds(pos) or not self.torus:
+            # alternative to mesa's torus: no boundaries!!!
             return pos
-        elif not self.torus:
-            # alternative to mesa's torus: "bouncing off the walls"
-            # later down the line, will use the individual's heading to calculate redirection, and whether to add or remove angle
-            # for now, let's do brute force: 50% chance of moving to the left or right, top or bottom
-            # also for now, strength of readjustment is fixed, and does not depend how dangerously close to the wall the indiv gets
-            # by_ is a boolean np.array btlr with the out of wall. If negative, the individual is in the buffer zone.
-            by_
-            raise Exception("Point out of bounds, and space non-toroidal. Finish writing the function!")
         else:
             # this code below is from the mesa project
-               # It updates the position if out of bound
+            # It updates the position if out of bound
             # The new position is calculated based on a torus
             try:
                 x = self.x_min + ((pos[0] - self.x_min) % self.width)
@@ -120,18 +112,3 @@ class SwarmSpace(ContinuousSpace):
                     return np.array((x, y))
             except FloatingPointError as e:
                 logging.info("Got error {0}, with position: {1}".format(e, pos))
-        
-    def out_of_bounds(self, pos: FloatCoordinate, dist_max: float, h: FloatCoordinate = np.array([0,0])) -> bool:
-        """Check if a point is out of bounds, or nearing a border.
-           NB: in the future, dist_max should be an init parameter"""
-        x, y = pos
-
-        if self.torus:
-            return (x < self.x_min or x >= self.x_max or y < self.y_min or y >= self.y_max, None)
-        else:
-            # distance to wall (bottom, top, left, right)
-              # for now, let's do brute force: vertical / horizontal distance to the 4 walls
-            # later on, take into account heading
-            # NB: this code is really ugly, please beautify!
-            dist_to_wall_btlr = (np.array([self.y_min, self.y_max, self.x_min, self.x_max]) - np.array([y, y, x, x]) ) < np.array([dist_max] * 4)
-            return (np.any(dist_to_wall_btlr), np.where(dist_to_wall_btlr) )

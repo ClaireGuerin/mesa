@@ -15,3 +15,6 @@ class Parameters(object):
 
 		self.cruiseSpeed = 2.0  # cruise speed in BL/s.
 		self.relaxationTime = 0.2 # characteristic time scale for the return to cruise speed, in s.
+  
+		self.border_distance = 10
+		self.border_strength = 0.5
